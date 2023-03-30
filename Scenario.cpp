@@ -1,19 +1,23 @@
 #include<GL/glut.h>
 #include<math.h>
 
+#ifdef _WIN32
+#include<X11/xlib.h>
+Display* disp = XOpenDisplay(NULL);
+Screen*  scrn = DefaultScreenOfDisplay(disp);
+int height = scrn->height;
+int width  = scrn->width;
+#endif
+
+#ifdef linux
+
+#endif
+
 #define PI 3.14
 
-void draw_plataform(void);
+void draw_plataform(int, int);
+void draw_plataforms();
 void draw_sun(void);
-
-class Scenario{
-    private:
-        int n_characters = 0;
-    public:
-        Scenario(int n_characters) {
-            this->n_characters = n_characters;
-        }
-};
 
 void initScenario(void) {
     GLshort redScenario = (GLclampf) 037 / 255;
@@ -35,16 +39,22 @@ void initScenario(void) {
 void draw(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     draw_sun();
-    draw_plataform();
+    draw_plataforms();
     glFlush();
 }
 
-void draw_plataform(void) {
+void draw_plataforms(void) {
+    for(int i = 50;i < 1000; i = i + 50) {
+        draw_plataform(i, i);
+    }
+}
+
+void draw_plataform(int x, int y) {
     glBegin(GL_QUADS);
-    glVertex2i(0, 0);
-    glVertex2i(500, 0);
-    glVertex2i(500, 100);
-    glVertex2i(0, 100);
+    glVertex2i(x, y);
+    glVertex2i(x + 500, y + 0);
+    glVertex2i(x + 500, y + 100);
+    glVertex2i(x + 0, y + 100);
     glColor3f(1, 1, 0);
     glEnd();
 }
