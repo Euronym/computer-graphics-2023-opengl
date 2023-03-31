@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "glut.h": "c"
+    },
+    "cmake.sourceDirectory": "${workspaceFolder}/glfw/src",
+    "C_Cpp.errorSquiggles": "disabled"
+}
