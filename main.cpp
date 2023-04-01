@@ -17,38 +17,8 @@
 #include "Character.cpp"
 #include "Gun.cpp"
 
-void handleKeyboard(GLubyte, GLint, GLint);
-void handleMouse(GLint, GLint, GLint, GLint);
+int xr, yr = 0;
 
-GLfloat xr, xl = 0;
-
-bool shoot = False;
-
-void handleKeyboard(GLubyte key, GLint x, GLint y) {
-
-    GLint m = glutGetModifiers();
-
-    // movimentation logic for the characters.
-    switch(key) {
-        case 'w':
-        // if jump, applies a translation and modifies the state
-        break;
-
-        case 'a':
-        // if move left, modifies the state, rotates and translates
-        break;
-
-        case 's':
-        // TODO currently not implemented.
-        break;
-
-        case 'd':
-        // if move right, modifies the states and translates
-
-        break;
-
-    }
-}
 
 void handleMouse(GLint button, GLint action, GLint x, GLint y) {
     if(button == GLUT_LEFT_BUTTON){
@@ -80,23 +50,37 @@ void drawScene(void) {
     //Scenario scenario(1);
 
     glClear(GL_COLOR_BUFFER_BIT);
-    //scenario.drawSun();
-    //scenario.drawPlataforms();
-    //characterOne.drawCharacter();
-
-    //lastCoord = scenario.getLastCoord();
-
-    //Character characterTwo(characterName, lastCoord[0], lastCoord[1]);
-
-    //characterTwo.drawCharacter();
-    gun.drawGun();
-    if(shoot) {
-        gun.shoot();
-        shoot = False;
-    }
+    scenario.drawSun();
+    scenario.drawPlataforms();
+    character.drawCharacter(xr, yr);
     glFlush();
     glutPostRedisplay();
     glutSwapBuffers();
+}
+
+void handleKeyboard(unsigned char key, int x, int y) {
+    switch(key) {
+        case 'w':
+        yr += 10;
+        glutPostRedisplay();
+        break;
+
+        case 's':
+        yr -= 10;
+        glutPostRedisplay();
+        break;
+
+        case 'a':
+        xr -= 10;
+        glutPostRedisplay();
+        break;
+
+        case 'd':
+        xr += 10;
+        glutPostRedisplay();
+        break;
+    }
+
 }
 
 int main(int argc, char **argv) {
@@ -105,7 +89,7 @@ int main(int argc, char **argv) {
     int height = 400;
 
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
 
     glutInitWindowSize(width, height);
     glutInitWindowPosition(0, 0);
