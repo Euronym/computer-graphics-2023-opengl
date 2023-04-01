@@ -15,30 +15,8 @@
 #include "Scenario.cpp"
 #include "Character.cpp"
 
-void handleKeyboard(GLubyte, GLint, GLint);
-void handleMouse(GLint, GLint, GLint, GLint);
+int xr, yr = 0;
 
-void handleKeyboard(GLubyte key, GLint x, GLint y) {
-
-    GLint m = glutGetModifiers();
-
-    // movimentation logic for the characters.
-    if(key == 'w') {
-        // if jump, applies a translation and modifies the state
-    }
-    else if(key == 'a') {
-        // if move left, modifies the state, rotates and translates
-
-    }
-    else if(key == 's') {
-        // TODO currently not implemented.
-
-    }
-    else if(key == 'd') {
-        // if move right, modifies the states and translates
-
-    }
-}
 
 void handleMouse(GLint button, GLint action, GLint x, GLint y) {
 
@@ -65,8 +43,33 @@ void drawScene(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     scenario.drawSun();
     scenario.drawPlataforms();
-    character.drawCharacter();
+    character.drawCharacter(xr, yr);
     glFlush();
+}
+
+void handleKeyboard(unsigned char key, int x, int y) {
+    switch(key) {
+        case 'w':
+        yr += 10;
+        glutPostRedisplay();
+        break;
+
+        case 's':
+        yr -= 10;
+        glutPostRedisplay();
+        break;
+
+        case 'a':
+        xr -= 10;
+        glutPostRedisplay();
+        break;
+
+        case 'd':
+        xr += 10;
+        glutPostRedisplay();
+        break;
+    }
+
 }
 
 int main(int argc, char **argv) {
@@ -75,7 +78,7 @@ int main(int argc, char **argv) {
     int height = 400;
 
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
 
     glutInitWindowSize(width, height);
     glutInitWindowPosition(0, 0);
