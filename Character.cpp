@@ -7,6 +7,7 @@
 #define PI 3.14
 #endif
 
+
 struct Point{
     GLdouble x,y;
 };
@@ -16,23 +17,23 @@ class Character{
         std::string name;
         std::vector<Point> characterCoordinates;
     public:
-        Character(std::string name);
-        void addCoordinates();
+        Character(std::string name, GLdouble xStart, GLdouble yStart);
+        void addCoordinates(GLdouble xStart, GLdouble yStart);
         void walkFront();
         void walkBack();
         void drawCharacter();
 };
 
-Character::Character(std::string name) {
-    addCoordinates();
+Character::Character(std::string name, GLdouble xStart, GLdouble yStart) {
     this->name = name;
+    addCoordinates(xStart, yStart);
 }
-void Character::addCoordinates() {
+void Character::addCoordinates(GLdouble xStart, GLdouble yStart) {
     /*
         Fills the coordinate vector that represents the object. 
     */
 
-    Point origin = {-700, -210};
+    Point origin = {xStart, yStart};
     Point p1 = {origin.x, origin.y - 100};
     Point p2 = {origin.x + 30, origin.y - 140};
     Point p3 = {origin.x - 30, origin.y - 140};

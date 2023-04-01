@@ -2,32 +2,46 @@
 #include<math.h>
 #include<vector>
 #include<string>
+#include<random>
 
 #define PI 3.14
 
 class Scenario{
     private:
         int n;
+        std::vector<GLdouble> LastPlatformCoord;
+        std::vector<GLdouble> firstPlatformCoord;
     public:
         Scenario(int n){
             this->n = n;
         }
+        std::vector<GLdouble> getLastCoord();
+        std::vector<GLdouble> getFirstCoord();
         void loadBackground();
-        void drawPlataform(int x, int y);
+        void drawPlataform(int x, int y, int width, int height);
         void drawPlataforms();
         void drawSun();
 };
 
+
+std::vector<GLdouble> Scenario::getLastCoord() {
+    return this->LastPlatformCoord;
+}
+std::vector<GLdouble> Scenario::getFirstCoord() {
+    return this->firstPlatformCoord;
+}
+
 void Scenario::loadBackground() {
 
 }
-void Scenario::drawPlataform(int x, int y) {
-    glColor3f(1, 1, 0);
+void Scenario::drawPlataform(int x, int y, int width, int height) {
+
+    glColor3f(0.1, 0, 0.0);
     glBegin(GL_QUADS);
         glVertex2i(x, y);
-        glVertex2i(x + 500, y + 0);
-        glVertex2i(x + 500, y + 50);
-        glVertex2i(x + 0, y + 50);
+        glVertex2i(x + width, y);
+        glVertex2i(x + width, y + height);
+        glVertex2i(x, y + height);
     glEnd();
 }
 
@@ -46,8 +60,43 @@ void Scenario::drawSun(void) {
     glEnd();
 }
 void Scenario::drawPlataforms(void) {
-    //for(int i = 50;i < 1000; i = i + 50) {
-    //    drawPlataform(i, i);
-    //}
-    drawPlataform(-750, -400);
+
+    int characterHeight = 200;
+    int characterWidth = 0;
+    int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
+    int screenHeight = glutGet(GLUT_SCREEN_HEIGHT);
+
+    int blockWidths[] = {80, 120};
+    int blockWidth;
+    int index;
+
+    int i,j;
+
+    this->firstPlatformCoord.push_back(-800);
+    this->firstPlatformCoord.push_back(-400);
+    // draw rows
+    for(i = this->firstPlatformCoord[0];i < 1000; i = i + 150) {
+        // draw columns
+        if(i > screenWidth) {
+            break;
+        }
+        for(j = this->firstPlatformCoord[1]; j <= 0; j = j + characterHeight) {
+            if(j > screenHeight) {
+                break;
+            }
+            // randomly picks an index to delimitate the block's width
+            if(i == this->firstPlatformCoord[0] && j == this->firstPlatformCoord[0]) {
+                index = blockWidths[0];
+            }
+            else{
+                index = rand() % 2;
+            }
+            
+            blockWidth = blockWidths[index];
+            // draws an individual block
+            drawPlataform(i, j, blockWidth, 50);
+        }
+    }
+    this->LastPlatformCoord.push_back(710);
+    this->LastPlatformCoord.push_back(190);
 }

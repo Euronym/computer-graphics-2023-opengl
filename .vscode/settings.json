@@ -1,6 +1,8 @@
 {
     "files.associations": {
-        "glut.h": "c"
+        "glut.h": "c",
+        "random": "cpp",
+        "vector": "cpp"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/glfw/src",
     "C_Cpp.errorSquiggles": "disabled"

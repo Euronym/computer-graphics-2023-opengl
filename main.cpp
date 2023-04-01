@@ -11,37 +11,51 @@
 
 #include<GL/glut.h>
 #include<X11/Xlib.h>
+#include<iostream>
 
 #include "Scenario.cpp"
 #include "Character.cpp"
+#include "Gun.cpp"
 
 void handleKeyboard(GLubyte, GLint, GLint);
 void handleMouse(GLint, GLint, GLint, GLint);
+
+GLfloat xr, xl = 0;
+
+bool shoot = False;
 
 void handleKeyboard(GLubyte key, GLint x, GLint y) {
 
     GLint m = glutGetModifiers();
 
     // movimentation logic for the characters.
-    if(key == 'w') {
+    switch(key) {
+        case 'w':
         // if jump, applies a translation and modifies the state
-    }
-    else if(key == 'a') {
+        break;
+
+        case 'a':
         // if move left, modifies the state, rotates and translates
+        break;
 
-    }
-    else if(key == 's') {
+        case 's':
         // TODO currently not implemented.
+        break;
 
-    }
-    else if(key == 'd') {
+        case 'd':
         // if move right, modifies the states and translates
+
+        break;
 
     }
 }
 
 void handleMouse(GLint button, GLint action, GLint x, GLint y) {
-
+    if(button == GLUT_LEFT_BUTTON){
+        std::cout << "button pressed";
+        shoot = True;
+        glutPostRedisplay();
+    }
 }
 
 void initScenario(void) {
@@ -52,21 +66,37 @@ void initScenario(void) {
     glLoadIdentity();
 
     gluOrtho2D(-780, 780, -420, 420);
-    //gluOrtho2D(0, 0, 0, 0);
-
 }
 
 void drawScene(void) {
     std::string characterName = "cladius";
-    Character character(characterName);
 
-    Scenario scenario(1);
+    std::vector<GLdouble> lastCoord;
+
+    //Character characterOne(characterName, -700, -210);
+
+    Gun gun(10);
+
+    //Scenario scenario(1);
 
     glClear(GL_COLOR_BUFFER_BIT);
-    scenario.drawSun();
-    scenario.drawPlataforms();
-    character.drawCharacter();
+    //scenario.drawSun();
+    //scenario.drawPlataforms();
+    //characterOne.drawCharacter();
+
+    //lastCoord = scenario.getLastCoord();
+
+    //Character characterTwo(characterName, lastCoord[0], lastCoord[1]);
+
+    //characterTwo.drawCharacter();
+    gun.drawGun();
+    if(shoot) {
+        gun.shoot();
+        shoot = False;
+    }
     glFlush();
+    glutPostRedisplay();
+    glutSwapBuffers();
 }
 
 int main(int argc, char **argv) {
@@ -82,10 +112,10 @@ int main(int argc, char **argv) {
 
     glutCreateWindow("Jogo");
     initScenario();
+    glutDisplayFunc(drawScene);
 
     glutKeyboardFunc(handleKeyboard);
-    //glutMouseFunc(handleMouse);
-    glutDisplayFunc(drawScene);
+    glutMouseFunc(handleMouse);
     glutMainLoop();
 
     return 0;
