@@ -1,65 +1,63 @@
 #include<GL/freeglut.h>
+#include <unistd.h>
+
 
 class Gun{
     private:
         int nBullets = 0;
     public:
         Gun(int nBullets);
-        void shoot();
-        void drawGun();
-        void drawBullet();
+        void shoot(GLdouble, GLdouble);
+        void drawGun(GLdouble, GLdouble, GLdouble, GLdouble);
+        void drawBullet(GLdouble x, GLdouble y);
         void shootBullet(GLdouble x, GLdouble y);
 };
 
 Gun::Gun(int nBullets) {
     this->nBullets = nBullets;
 }
-void Gun::shoot() {
-    /*
-    int x = 40;
+void Gun::shoot(GLdouble xUpdate, GLdouble yUpdate) {
+    int y = -280;
     if(nBullets != 0){
-        for(int y = 40; y < 1000; y = y + 10){
-            shootBullet(x, y);
+        for(int x = -680; x < 1000; x = x  + 10){
+            drawBullet(x + xUpdate, y + yUpdate);
+            glutPostRedisplay();
+            glutSwapBuffers();
         }
     }
-    */
     this->nBullets -= 1;
-    drawBullet();
 }
-void Gun::drawGun() {
+void Gun::drawGun(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
     glColor3f(0, 0, 0);
     glBegin(GL_QUADS);
-        glVertex2d(0, 0);
-        glVertex2d(10, 0);
-        glVertex2d(10, 20);
-        glVertex2d(0, 20);
+        glVertex2d(x + xUpdate, y + yUpdate);
+        glVertex2d(x + 10 + xUpdate, y + 0 + yUpdate);
+        glVertex2d(x + 10 + xUpdate, y + 20 + yUpdate);
+        glVertex2d(x + 0 + xUpdate, y + 20 + yUpdate);
     glEnd();
     glBegin(GL_QUADS);
-        glVertex2d(0, 20);
-        glVertex2d(10, 20);
-        glVertex2d(10, 30);
-        glVertex2d(0, 30);
+        glVertex2d(x + 0 + xUpdate, y + 20 + yUpdate);
+        glVertex2d(x + 10 + xUpdate, y + 20 + yUpdate);
+        glVertex2d(x + 10 + xUpdate, y + 30 + yUpdate);
+        glVertex2d(x + 0 + xUpdate, y + 30 + yUpdate);
     glEnd();
     glBegin(GL_QUADS);
-        glVertex2d(10, 20);
-        glVertex2d(30, 20);
-        glVertex2d(30, 30);
-        glVertex2d(10, 30);
+        glVertex2d(x + 10 + xUpdate, y + 20 + yUpdate);
+        glVertex2d(x + 30 + xUpdate, y + 20 + yUpdate);
+        glVertex2d(x + 30 + xUpdate, y + 30 + yUpdate);
+        glVertex2d(x + 10 + xUpdate, y + 30 + yUpdate);
     glEnd();
 }
 void Gun::shootBullet(GLdouble x, GLdouble y) {
-    glPushMatrix();
-    glTranslated(x, y, 0);
-    drawBullet();
-    glPopMatrix();
+
 }
-void Gun::drawBullet() {
+void Gun::drawBullet(GLdouble x, GLdouble y) {
     int f1 = 40;
     int f2 = 20;
     glColor3f(1, 0.5, 0);
     glBegin(GL_TRIANGLES);
-        glVertex2d(0 + f1, 0 + f2);
-        glVertex2d(0 + f1, 10 + f2);
-        glVertex2d(20 + f1, 5 + f2);
+        glVertex2d(0 + f1 + x, 0 + f2 + y);
+        glVertex2d(0 + f1 + x, 10 + f2 + y);
+        glVertex2d(20 + f1 + x, 5 + f2 + y);
     glEnd();
 }

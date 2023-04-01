@@ -15,14 +15,14 @@
 
 #include "Scenario.cpp"
 #include "Character.cpp"
-#include "Gun.cpp"
 
 int xr, yr = 0;
 
+bool shoot = False;
+bool rot = False;
 
 void handleMouse(GLint button, GLint action, GLint x, GLint y) {
     if(button == GLUT_LEFT_BUTTON){
-        std::cout << "button pressed";
         shoot = True;
         glutPostRedisplay();
     }
@@ -43,19 +43,19 @@ void drawScene(void) {
 
     std::vector<GLdouble> lastCoord;
 
-    //Character characterOne(characterName, -700, -210);
+    Character character(characterName, -700, -210);
 
-    Gun gun(10);
-
-    //Scenario scenario(1);
+    Scenario scenario(1);
 
     glClear(GL_COLOR_BUFFER_BIT);
     scenario.drawSun();
     scenario.drawPlataforms();
-    character.drawCharacter(xr, yr);
+    character.drawCharacter(xr, yr, rot);
+    if(shoot){
+        character.shoot(xr, yr);
+        shoot = False;
+    }
     glFlush();
-    glutPostRedisplay();
-    glutSwapBuffers();
 }
 
 void handleKeyboard(unsigned char key, int x, int y) {

@@ -84,15 +84,7 @@ void Scenario::drawPlataforms(void) {
             if(j > screenHeight) {
                 break;
             }
-            // randomly picks an index to delimitate the block's width
-            if(i == this->firstPlatformCoord[0] && j == this->firstPlatformCoord[0]) {
-                index = blockWidths[0];
-            }
-            else{
-                index = rand() % 2;
-            }
-            
-            blockWidth = blockWidths[index];
+            blockWidth = blockWidths[0];
             // draws an individual block
             drawPlataform(i, j, blockWidth, 50);
         }

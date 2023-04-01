@@ -8,6 +8,7 @@
 #define PI 3.14
 #endif
 
+#include "Gun.cpp"
 
 struct Point{
     GLdouble x,y;
@@ -22,26 +23,52 @@ class Character{
         float tx_2 = 0.0f;
         float maxTheta = 35.0f;
         int offset = 0;
+        int hp = 5; // character's total life.
         std::string name;
         std::vector<Point> characterCoordinates;
+        Gun characterGun;
     public:
         Character(std::string name, GLdouble xStart, GLdouble yStart);
         void addCoordinates(GLdouble xStart, GLdouble yStart);
         void walkFront();
         void walkBack();
-        void drawCharacter(float , float);
+        void drawCharacter(float , float, bool);
         void head(float , float);
         void body(float , float);
         void leftArm(float , float);
         void rightArm(float , float);
         void leftLeg(float , float);
         void rightLeg(float , float);
+        void shoot(GLdouble, GLdouble);
+        void drawHpBar(GLdouble, GLdouble, GLdouble, GLdouble);
 };
 
-Character::Character(std::string name, GLdouble xStart, GLdouble yStart) {
+Character::Character(std::string name, GLdouble xStart, GLdouble yStart): characterGun(10) {
     this->name = name;
     addCoordinates(xStart, yStart);
 }
+
+void Character::shoot(GLdouble xUpdate, GLdouble yUpdate) {
+    this->characterGun.shoot(xUpdate, yUpdate);
+}
+
+void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
+    // frame for hp bar
+    /*
+    glBegin(GL_QUADS);
+        glVertex2d();
+        glVertex2d();
+        glVertex2d();
+        glVertex2d();
+    glEnd();
+    // hpbar itself.
+    glBegin();
+
+    glEnd();
+    */
+
+}
+
 void Character::addCoordinates(GLdouble xStart, GLdouble yStart) {
     /*
         Fills the coordinate vector that represents the object. 
@@ -127,7 +154,11 @@ void Character::rightArm(float xr, float yr) {
     glEnd();
 }
 
-void Character::drawCharacter(float xr, float yr) {
+void Character::drawCharacter(float xr, float yr, bool rot) {
+    // draw gun
+    glPushMatrix();
+    //glScaled(0.5, 0.5, 0);
+    this->characterGun.drawGun(-650, -280, xr, yr);
     //draw head
     head(xr, yr);
     //draw body
@@ -140,6 +171,8 @@ void Character::drawCharacter(float xr, float yr) {
     rightArm(xr, yr);
     //draw other arm
     leftArm(xr, yr);
+    glPopMatrix();
+
     glFlush();
     glutPostRedisplay();
     glutSwapBuffers();
