@@ -16,6 +16,8 @@
 #include "Scenario.cpp"
 #include "Character.cpp"
 
+#define SPACEBAR 32
+
 int xr, yr = 0;
 
 bool shoot = False;
@@ -60,11 +62,10 @@ void drawScene(void) {
 
 void handleKeyboard(unsigned char key, int x, int y) {
     switch(key) {
-        case 'w':
-        yr += 10;
+        case SPACEBAR:
+        yr = 40;
         glutPostRedisplay();
         break;
-
         case 's':
         yr -= 10;
         glutPostRedisplay();
