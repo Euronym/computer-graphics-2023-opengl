@@ -4,18 +4,29 @@
 
 class Gun{
     private:
-        int nBullets = 0;
+        int nBullets;
+        int capacity = 10;
     public:
         Gun(int nBullets);
         void shoot(GLdouble, GLdouble, int);
         void drawGun(GLdouble, GLdouble, GLdouble, GLdouble);
         void drawBullet(GLdouble x, GLdouble y);
         void shootBullet(GLdouble x, GLdouble y);
+        void reloadGun();
+        int getnCapacity();
         int getnBullets();
 };
 
 int Gun::getnBullets() {
     return this->nBullets;
+}
+
+int Gun::getnCapacity() {
+    return this->capacity;
+}
+
+void Gun::reloadGun() {
+    this->nBullets = 10;
 }
 
 Gun::Gun(int nBullets) {
@@ -45,8 +56,8 @@ void Gun::shoot(GLdouble xUpdate, GLdouble yUpdate, int rotate_angle) {
                 glutSwapBuffers();
             }
         }
+        this->nBullets -= 1;
     }
-    this->nBullets -= 1;
 }
 void Gun::drawGun(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
     glColor3f(0, 0, 0);
