@@ -53,20 +53,46 @@ void Character::shoot(GLdouble xUpdate, GLdouble yUpdate) {
 }
 
 void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
+
+    GLdouble boxWidth = 100;
+    GLdouble boxHeight = 50;
+
+    GLdouble barStartxp1 = x + xUpdate;
+    GLdouble barStartyp1 = y + yUpdate;
+    GLdouble barStartxp2 = x + xUpdate;
+    GLdouble barStartyp2 = y + yUpdate + boxHeight;
+
+    GLdouble barEndxp1 = x + xUpdate + 20;
+    GLdouble barEndyp1 = y + yUpdate;
+    GLdouble barEndxp2 = x + xUpdate + 20;
+    GLdouble barEndyp2 = y + yUpdate + boxHeight;
+
     // frame for hp bar
-    /*
+    glColor3f(1, 0, 0);
     glBegin(GL_QUADS);
-        glVertex2d();
-        glVertex2d();
-        glVertex2d();
-        glVertex2d();
+        glVertex2d(x + xUpdate, y + yUpdate);
+        glVertex2d(x + xUpdate + boxWidth, y + yUpdate);
+        glVertex2d(x + xUpdate + boxWidth, y + yUpdate + boxHeight);
+        glVertex2d(x + xUpdate, y + yUpdate + boxHeight);
     glEnd();
-    // hpbar itself.
-    glBegin();
 
-    glEnd();
-    */
+    glColor3f(0, 1, 0);
+    // generate multiple health bars
+    for(int i = 0;i < this->hp; i++) {
+        glBegin(GL_QUADS);
+            // hpbar itself.
+            glVertex2d(barStartxp1, barStartyp1);
+            glVertex2d(barEndxp1, barEndyp1);
+            glVertex2d(barEndxp2, barEndyp2);
+            glVertex2d(barStartxp2, barStartyp2);
+        glEnd();
 
+        barStartxp1 = barEndxp1;
+        barStartxp2 = barEndxp2;
+
+        barEndxp1 += 20;
+        barEndxp2 += 20;
+    }
 }
 
 void Character::addCoordinates(GLdouble xStart, GLdouble yStart) {
@@ -156,9 +182,11 @@ void Character::rightArm(float xr, float yr) {
 
 void Character::drawCharacter(float xr, float yr, bool rot) {
     // draw gun
-    glPushMatrix();
+    //glPushMatrix();
     //glScaled(0.5, 0.5, 0);
     this->characterGun.drawGun(-650, -280, xr, yr);
+    // draw hp bar
+    drawHpBar(-830, -250, xr, yr);
     //draw head
     head(xr, yr);
     //draw body
