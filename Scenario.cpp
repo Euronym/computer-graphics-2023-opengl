@@ -43,6 +43,10 @@ std::vector<GLdouble> Scenario::getFirstCoord() {
     return this->firstPlatformCoord;
 }
 
+void Scenario::detectCollision(GLdouble ) {
+
+}
+
 void Scenario::loadBackground() {
 
 }
