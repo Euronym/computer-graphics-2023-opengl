@@ -32,14 +32,14 @@ class Character{
         void addCoordinates(GLdouble xStart, GLdouble yStart);
         void walkFront();
         void walkBack();
-        void drawCharacter(float , float, bool);
+        void drawCharacter(float , float, bool, int);
         void head(float , float);
         void body(float , float);
         void leftArm(float , float);
         void rightArm(float , float);
         void leftLeg(float , float);
         void rightLeg(float , float);
-        void shoot(GLdouble, GLdouble);
+        void shoot(GLdouble, GLdouble, int);
         void drawHpBar(GLdouble, GLdouble, GLdouble, GLdouble);
 };
 
@@ -48,8 +48,8 @@ Character::Character(std::string name, GLdouble xStart, GLdouble yStart): charac
     addCoordinates(xStart, yStart);
 }
 
-void Character::shoot(GLdouble xUpdate, GLdouble yUpdate) {
-    this->characterGun.shoot(xUpdate, yUpdate);
+void Character::shoot(GLdouble xUpdate, GLdouble yUpdate, int rotate_angle) {
+    this->characterGun.shoot(xUpdate, yUpdate, rotate_angle);
 }
 
 void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
@@ -90,17 +90,6 @@ void Character::addCoordinates(GLdouble xStart, GLdouble yStart) {
     characterCoordinates.push_back(p5);
     characterCoordinates.push_back(p6);
 }
-
-void Character::walkFront() {
-    glTranslated(1000, 0, 1);
-    offset += 10100;
-}
-
-void Character::walkBack() {
-    glTranslated(0, 0, 0);
-    glRotated(180, 0, 0, 1);
-    glTranslated(-10, 0, 0);
-}   
 
 void Character::head(float xr, float yr) {
     double radius = 10;
@@ -154,25 +143,34 @@ void Character::rightArm(float xr, float yr) {
     glEnd();
 }
 
-void Character::drawCharacter(float xr, float yr, bool rot) {
+void Character::drawCharacter(float xr, float yr, bool rot, int rotate_angle) {
     // draw gun
     glPushMatrix();
-    //glScaled(0.5, 0.5, 0);
+    if (rotate_angle > 0) {
+        glTranslatef((xr + characterCoordinates[0].x), (yr + characterCoordinates[0].y), 0);
+        glRotatef(rotate_angle, 0, 1, 0);
+        glTranslatef(-(xr + characterCoordinates[0].x), -(yr + characterCoordinates[0].y), 0);
+    }
+
     this->characterGun.drawGun(-650, -280, xr, yr);
+    
     //draw head
     head(xr, yr);
+    
     //draw body
     body(xr, yr);
+    
     //draw leg
     rightLeg(xr, yr);
+    
     //draw other leg
     leftLeg(xr, yr);
+
     //draw arm
     rightArm(xr, yr);
     //draw other arm
     leftArm(xr, yr);
     glPopMatrix();
-
     glFlush();
     glutPostRedisplay();
     glutSwapBuffers();
