@@ -20,6 +20,9 @@ int xr, yr = 0;
 
 bool shoot = False;
 bool rot = False;
+char button_stack = ' ';
+int rotate_angle = 0;
+
 
 void handleMouse(GLint button, GLint action, GLint x, GLint y) {
     if(button == GLUT_LEFT_BUTTON){
@@ -50,9 +53,9 @@ void drawScene(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     scenario.drawSun();
     scenario.drawPlataforms();
-    character.drawCharacter(xr, yr, rot);
+    character.drawCharacter(xr, yr, rot, rotate_angle);
     if(shoot){
-        character.shoot(xr, yr);
+        character.shoot(xr, yr, rotate_angle);
         shoot = False;
     }
     glFlush();
@@ -61,24 +64,37 @@ void drawScene(void) {
 void handleKeyboard(unsigned char key, int x, int y) {
     switch(key) {
         case 'w':
-        yr += 10;
-        glutPostRedisplay();
-        break;
+            yr += 10;
+            glutPostRedisplay();
+            break;
 
         case 's':
-        yr -= 10;
-        glutPostRedisplay();
-        break;
+            yr -= 10;
+            glutPostRedisplay();
+            break;
 
         case 'a':
-        xr -= 10;
-        glutPostRedisplay();
-        break;
+            if (button_stack == 'd') {
+                rotate_angle = 180;
+                xr -= 10;
+            } else if (button_stack == ' ' || button_stack == 'a') {
+                xr -= 10;
+            }
+            button_stack = 'a';            
+            glutPostRedisplay();
+            break;
 
         case 'd':
-        xr += 10;
-        glutPostRedisplay();
-        break;
+            if (button_stack == 'a') {
+                rotate_angle = 180;
+                xr += 10;
+            } else if (button_stack == ' ' || button_stack == 'd') {
+                xr += 10;
+                rotate_angle = 0;
+            }
+            button_stack = 'd';
+            glutPostRedisplay();
+            break;
     }
 
 }
@@ -99,6 +115,13 @@ int main(int argc, char **argv) {
     glutDisplayFunc(drawScene);
 
     glutKeyboardFunc(handleKeyboard);
+/*
+    if (rotate) {
+        rotate_angle = 180;
+    } {
+        rotate_angle = 0;
+    }
+*/
     glutMouseFunc(handleMouse);
     glutMainLoop();
 
