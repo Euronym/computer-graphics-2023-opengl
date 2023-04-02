@@ -1,6 +1,7 @@
 #include<GL/freeglut.h>
 #include<string>
 #include<vector>
+#include<iostream>
 #include<stdio.h>
 #include<math.h>
 
@@ -18,15 +19,7 @@ class Character{
     private:
         int isUp = 1;
         float xr, yr = 0;
-        float rotateAngle = 0;
         bool move = true;
-		bool forwardMov = false;
-        float incTheta = 1.5f;
-        float fowardIncrmt = 0.0015f;
-    	float movTheta = 0.0f;
-        float tx_2 = 0.0f;
-        float maxTheta = 35.0f;
-        int offset = 0;
         static int hp; // character's total life.
         static int currentHp; // current life
         std::string name;
@@ -46,9 +39,11 @@ class Character{
         void rightLeg(float , float);
         void Down();
         void Up();
-        void shoot();
+        void shoot(int);
         void jump();
+        void drawAmmo(GLdouble, GLdouble, GLdouble, GLdouble);
         void drawHpBar(GLdouble, GLdouble, GLdouble, GLdouble);
+        void reload();
 };
 
 int Character::hp = 5;
@@ -59,8 +54,23 @@ Character::Character(std::string name, GLdouble xStart, GLdouble yStart): charac
     addCoordinates(xStart, yStart);
 }
 
-void Character::shoot() {
-    this->characterGun.shoot(this->xr, this->yr, this->rotateAngle);
+void Character::shoot(int rotate_angle) {
+    this->characterGun.shoot(this->xr, this->yr, rotate_angle);
+}
+
+void Character::reload() {
+    this->characterGun.reloadGun();
+}
+
+void Character::drawAmmo(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
+    glRasterPos2i(x + xUpdate, y + yUpdate);
+    glColor3f(0, 0, 0);
+    std::string currentBullets = std::to_string(this->characterGun.getnBullets());
+    std::string capacity = std::to_string(this->characterGun.getnCapacity());
+    std::string str = currentBullets + "/" + capacity;
+    const unsigned char * ammo = reinterpret_cast<const unsigned char*>(str.c_str());
+
+    glutBitmapString(GLUT_BITMAP_HELVETICA_18, ammo);
 }
 
 void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
@@ -157,20 +167,9 @@ void Character::addCoordinates(GLdouble xStart, GLdouble yStart) {
     characterCoordinates.push_back(p10);
 }
 
-void Character::walkFront() {
-    glTranslated(1000, 0, 1);
-    offset += 10100;
-}
-
 void Character::jump() {
 
 }
-
-void Character::walkBack() {
-    glTranslated(0, 0, 0);
-    glRotated(180, 0, 0, 1);
-    glTranslated(-10, 0, 0);
-}   
 
 void Character::head(float xr, float yr) {
     double radius = 10;
@@ -266,6 +265,8 @@ void Character::drawCharacter(float xr, float yr, bool rot, int rotateAngle) {
     this->characterGun.drawGun(-650, -280, currentX, currentY);
     // draw hp bar
     drawHpBar(-830, -250, xr, yr);
+    // draw ammo info
+    drawAmmo(-833, -295, xr, yr);
     //draw head
     head(currentX, currentY);
     //draw body
