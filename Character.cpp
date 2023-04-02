@@ -23,7 +23,8 @@ class Character{
         float tx_2 = 0.0f;
         float maxTheta = 35.0f;
         int offset = 0;
-        int hp = 5; // character's total life.
+        static int hp; // character's total life.
+        static int currentHp; // current life
         std::string name;
         std::vector<Point> characterCoordinates;
         Gun characterGun;
@@ -42,6 +43,9 @@ class Character{
         void shoot(GLdouble, GLdouble);
         void drawHpBar(GLdouble, GLdouble, GLdouble, GLdouble);
 };
+
+int Character::hp = 5;
+int Character::currentHp = hp;
 
 Character::Character(std::string name, GLdouble xStart, GLdouble yStart): characterGun(10) {
     this->name = name;
@@ -67,6 +71,8 @@ void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUp
     GLdouble barEndxp2 = x + xUpdate + 20;
     GLdouble barEndyp2 = y + yUpdate + boxHeight;
 
+    int factor = 1;
+
     // frame for hp bar
     glColor3f(1, 0, 0);
     glBegin(GL_QUADS);
@@ -79,12 +85,14 @@ void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUp
     glColor3f(0, 1, 0);
     // generate multiple health bars
     for(int i = 0;i < this->hp; i++) {
+        // if current hp is lower than total
+        // does not show bars as green.
         glBegin(GL_QUADS);
             // hpbar itself.
-            glVertex2d(barStartxp1, barStartyp1);
-            glVertex2d(barEndxp1, barEndyp1);
-            glVertex2d(barEndxp2, barEndyp2);
-            glVertex2d(barStartxp2, barStartyp2);
+            glVertex2d(factor * barStartxp1, factor * barStartyp1);
+            glVertex2d(factor * barEndxp1, factor * barEndyp1);
+            glVertex2d(factor * barEndxp2, factor * barEndyp2);
+            glVertex2d(factor * barStartxp2, factor * barStartyp2);
         glEnd();
 
         barStartxp1 = barEndxp1;
@@ -92,7 +100,9 @@ void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUp
 
         barEndxp1 += 20;
         barEndxp2 += 20;
+        factor = 0;
     }
+    this->currentHp = this->currentHp - 1;
 }
 
 void Character::addCoordinates(GLdouble xStart, GLdouble yStart) {
