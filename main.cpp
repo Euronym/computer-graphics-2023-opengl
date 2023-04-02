@@ -34,6 +34,7 @@ Scenario scenario(1);
 void handleMouse(GLint button, GLint action, GLint x, GLint y) {
     if(button == GLUT_LEFT_BUTTON){
         shoot = True;
+        character.removeHp(1);
         glutPostRedisplay();
     }
 }

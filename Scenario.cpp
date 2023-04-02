@@ -5,12 +5,22 @@
 #include<random>
 
 #define PI 3.14
+#define COLLISION_THRESHOLD 0.1
+
+struct Point{
+    GLdouble x,y;
+};
+
+struct PlataformPoints{
+    std::vector<Point> points;
+};
 
 class Scenario{
     private:
         int n;
         std::vector<GLdouble> LastPlatformCoord;
         std::vector<GLdouble> firstPlatformCoord;
+        std::vector<PlataformPoints> plataformPoints;
     public:
         Scenario(int n){
             this->n = n;
@@ -21,6 +31,8 @@ class Scenario{
         void drawPlataform(int x, int y, int width, int height);
         void drawPlataforms();
         void drawSun();
+        void drawLava(); 
+        void detectCollision(); // detect player/scenario collisions
 };
 
 
@@ -36,12 +48,17 @@ void Scenario::loadBackground() {
 }
 void Scenario::drawPlataform(int x, int y, int width, int height) {
 
+    Point p1 = {x, y};
+    Point p2 = {x + width, y};
+    Point p3 = {x + width, y + height};
+    Point p4 = {x, y + height};
+
     glColor3f(0.1, 0, 0.0);
     glBegin(GL_QUADS);
-        glVertex2i(x, y);
-        glVertex2i(x + width, y);
-        glVertex2i(x + width, y + height);
-        glVertex2i(x, y + height);
+        glVertex2i(p1.x, p1.y);
+        glVertex2i(p2.x, p2.y);
+        glVertex2i(p3.x, p3.y);
+        glVertex2i(p4.x, p4.y);
     glEnd();
 }
 
@@ -55,7 +72,8 @@ void Scenario::drawSun(void) {
             double angle = 2 * PI * i / 300;
             double x = cos(angle) * radius;
             double y = sin(angle) * radius;
-            glVertex2d(ori_x + x, ori_y + y);
+            Point p = {ori_x + y, ori_y + y};
+            glVertex2d(p.x, p.y);
         }
     glEnd();
 }
