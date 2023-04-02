@@ -20,8 +20,15 @@
 
 int xr, yr = 0;
 
-bool shoot = False;
-bool rot = False;
+bool shoot = false;
+bool rot = false;
+bool jump = false;
+
+int timer = 100;
+
+std::string characterName = "cladius";
+Character character(characterName, -700, -210);
+Scenario scenario(1);
 
 void handleMouse(GLint button, GLint action, GLint x, GLint y) {
     if(button == GLUT_LEFT_BUTTON){
@@ -41,21 +48,13 @@ void initScenario(void) {
 }
 
 void drawScene(void) {
-    std::string characterName = "cladius";
-
-    std::vector<GLdouble> lastCoord;
-
-    Character character(characterName, -700, -210);
-
-    Scenario scenario(1);
-
     glClear(GL_COLOR_BUFFER_BIT);
     scenario.drawSun();
     scenario.drawPlataforms();
     character.drawCharacter(xr, yr, rot);
     if(shoot){
-        character.shoot(xr, yr);
-        shoot = False;
+        character.shoot();
+        shoot = false;
     }
     glFlush();
 }
@@ -63,11 +62,18 @@ void drawScene(void) {
 void handleKeyboard(unsigned char key, int x, int y) {
     switch(key) {
         case SPACEBAR:
-        yr = 40;
+        yr += 40;
+        jump = true;
         glutPostRedisplay();
         break;
+
+        case 'w':
+        character.Up();
+        glutPostRedisplay();
+        break;
+
         case 's':
-        yr -= 10;
+        character.Down();
         glutPostRedisplay();
         break;
 
@@ -84,6 +90,19 @@ void handleKeyboard(unsigned char key, int x, int y) {
 
 }
 
+void Timer(int value) {
+    if(jump){
+        if(yr != 0){
+            yr -= 5;
+        }else{
+            jump = false;
+        }
+    }
+
+	glutPostRedisplay();
+	glutTimerFunc(timer, Timer, value);
+}
+
 int main(int argc, char **argv) {
 
     int width = 700;
@@ -96,11 +115,12 @@ int main(int argc, char **argv) {
     glutInitWindowPosition(0, 0);
 
     glutCreateWindow("Jogo");
-    initScenario();
     glutDisplayFunc(drawScene);
 
     glutKeyboardFunc(handleKeyboard);
     glutMouseFunc(handleMouse);
+    glutTimerFunc(timer, Timer, 1);
+    initScenario();
     glutMainLoop();
 
     return 0;
