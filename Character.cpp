@@ -27,7 +27,8 @@ class Character{
         float tx_2 = 0.0f;
         float maxTheta = 35.0f;
         int offset = 0;
-        int hp = 5; // character's total life.
+        static int hp; // character's total life.
+        static int currentHp; // current life
         std::string name;
         std::vector<Point> characterCoordinates;
         Gun characterGun;
@@ -50,6 +51,9 @@ class Character{
         void drawHpBar(GLdouble, GLdouble, GLdouble, GLdouble);
 };
 
+int Character::hp = 5;
+int Character::currentHp = hp;
+
 Character::Character(std::string name, GLdouble xStart, GLdouble yStart): characterGun(10) {
     this->name = name;
     addCoordinates(xStart, yStart);
@@ -60,19 +64,52 @@ void Character::shoot() {
 }
 
 void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
+
+    GLdouble boxWidth = 100;
+    GLdouble boxHeight = 50;
+
+    GLdouble barStartxp1 = x + xUpdate;
+    GLdouble barStartyp1 = y + yUpdate;
+    GLdouble barStartxp2 = x + xUpdate;
+    GLdouble barStartyp2 = y + yUpdate + boxHeight;
+
+    GLdouble barEndxp1 = x + xUpdate + 20;
+    GLdouble barEndyp1 = y + yUpdate;
+    GLdouble barEndxp2 = x + xUpdate + 20;
+    GLdouble barEndyp2 = y + yUpdate + boxHeight;
+
+    int factor = 1;
+
     // frame for hp bar
-    /*
+    glColor3f(1, 0, 0);
     glBegin(GL_QUADS);
-        glVertex2d();
-        glVertex2d();
-        glVertex2d();
-        glVertex2d();
+        glVertex2d(x + xUpdate, y + yUpdate);
+        glVertex2d(x + xUpdate + boxWidth, y + yUpdate);
+        glVertex2d(x + xUpdate + boxWidth, y + yUpdate + boxHeight);
+        glVertex2d(x + xUpdate, y + yUpdate + boxHeight);
     glEnd();
     // hpbar itself.
-    glBegin();
+    glColor3f(0, 1, 0);
+    // generate multiple health bars
+    for(int i = 0;i < this->hp; i++) {
+        // if current hp is lower than total
+        // does not show bars as green.
+        glBegin(GL_QUADS);
+            // hpbar itself.
+            glVertex2d(factor * barStartxp1, factor * barStartyp1);
+            glVertex2d(factor * barEndxp1, factor * barEndyp1);
+            glVertex2d(factor * barEndxp2, factor * barEndyp2);
+            glVertex2d(factor * barStartxp2, factor * barStartyp2);
+        glEnd();
 
-    glEnd();
-    */
+        barStartxp1 = barEndxp1;
+        barStartxp2 = barEndxp2;
+
+        barEndxp1 += 20;
+        barEndxp2 += 20;
+        factor = 0;
+    }
+    this->currentHp = this->currentHp - 1;
 }
 
 void Character::Down() {
@@ -224,9 +261,11 @@ void Character::drawCharacter(float xr, float yr, bool rot, int rotateAngle) {
     float currentY = this->yr;
 
     // draw gun
-    glPushMatrix();
+    //glPushMatrix();
     //glScaled(0.5, 0.5, 0);
     this->characterGun.drawGun(-650, -280, currentX, currentY);
+    // draw hp bar
+    drawHpBar(-830, -250, xr, yr);
     //draw head
     head(currentX, currentY);
     //draw body
