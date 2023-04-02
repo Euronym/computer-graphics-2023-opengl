@@ -79,6 +79,10 @@ void Character::drawAmmo(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpd
 
 }
 
+void Character::removeHp(int dmg) {
+    this->currentHp -= dmg;
+}
+
 void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
 
     GLdouble boxWidth = 100;
@@ -104,10 +108,14 @@ void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUp
         glVertex2d(x + xUpdate + boxWidth, y + yUpdate + boxHeight);
         glVertex2d(x + xUpdate, y + yUpdate + boxHeight);
     glEnd();
+
     // hpbar itself.
     glColor3f(0, 1, 0);
     // generate multiple health bars
     for(int i = 0;i < this->hp; i++) {
+        if(i > this->currentHp){
+            factor = 0;
+        }
         // if current hp is lower than total
         // does not show bars as green.
         glBegin(GL_QUADS);
@@ -123,9 +131,7 @@ void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUp
 
         barEndxp1 += 20;
         barEndxp2 += 20;
-        factor = 0;
     }
-    this->currentHp = this->currentHp - 1;
 }
 
 void Character::Down() {
