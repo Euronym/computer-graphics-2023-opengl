@@ -29,7 +29,7 @@ int timer = 100;
 
 std::string characterName = "cladius";
 Character character(characterName, -700, -210);
-Scenario scenario(1);
+Scenario scenario;
 
 void handleMouse(GLint button, GLint action, GLint x, GLint y) {
     if(button == GLUT_LEFT_BUTTON){
@@ -39,8 +39,8 @@ void handleMouse(GLint button, GLint action, GLint x, GLint y) {
 }
 
 void initScenario(void) {
-    glClearColor(0, 0, 1, 1.0);
 
+    glClearColor(0, 0, 1, 0);
     glPointSize(1.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -52,6 +52,7 @@ void drawScene(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     scenario.drawSun();
     scenario.drawPlataforms();
+    scenario.loadBackground();
     character.drawCharacter(xr, yr, rot, rotate_angle);
     if(shoot){
         character.shoot();

@@ -6,23 +6,66 @@
 
 #define PI 3.14
 
+#include "stb_image.cpp"
+
+struct TextureContent{
+    unsigned char* dataPointer;
+    int widthImg;
+    int heightImg;
+    int nrChannels;    
+};
+
 class Scenario{
     private:
         int n;
+        TextureContent blockTexture;
         std::vector<GLdouble> LastPlatformCoord;
         std::vector<GLdouble> firstPlatformCoord;
     public:
-        Scenario(int n){
-            this->n = n;
-        }
+        Scenario();
+        ~Scenario();
         std::vector<GLdouble> getLastCoord();
         std::vector<GLdouble> getFirstCoord();
-        void loadBackground();
         void drawPlataform(int x, int y, int width, int height);
         void drawPlataforms();
         void drawSun();
+        void loadBackground();
 };
 
+Scenario::Scenario() {
+}
+
+Scenario::~Scenario() {
+}
+
+void Scenario::loadBackground() {
+    unsigned int texture;
+
+    int widthImg, heightImg, nrChannels;
+
+    unsigned char* data = stbi_load("skyTexture.jpeg", &widthImg, &heightImg, &nrChannels, 0);
+
+    glGenTextures(1, &texture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_QUADS);
+       glTexCoord2f(0, 0); glVertex2f(0, 0); 
+       glTexCoord2f(0, 1); glVertex2f(0, 100);
+       glTexCoord2f(1, 1); glVertex2f(100, 100);
+       glTexCoord2f(1, 0); glVertex2f(100, 0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    stbi_image_free(data);
+
+}
 
 std::vector<GLdouble> Scenario::getLastCoord() {
     return this->LastPlatformCoord;
@@ -31,16 +74,19 @@ std::vector<GLdouble> Scenario::getFirstCoord() {
     return this->firstPlatformCoord;
 }
 
-void Scenario::loadBackground() {
-
-}
 void Scenario::drawPlataform(int x, int y, int width, int height) {
 
-    glColor3f(0.1, 0, 0.0);
     glBegin(GL_QUADS);
+        //glTexCoord2f(0, 0);
         glVertex2i(x, y);
+
+        //glTexCoord2f(1, 0);
         glVertex2i(x + width, y);
+
+        //glTexCoord2f(1, 1);
         glVertex2i(x + width, y + height);
+
+        //glTexCoord2f(0, 1);
         glVertex2i(x, y + height);
     glEnd();
 }
@@ -91,4 +137,5 @@ void Scenario::drawPlataforms(void) {
     }
     this->LastPlatformCoord.push_back(710);
     this->LastPlatformCoord.push_back(190);
+
 }
