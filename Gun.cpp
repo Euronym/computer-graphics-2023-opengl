@@ -11,7 +11,12 @@ class Gun{
         void drawGun(GLdouble, GLdouble, GLdouble, GLdouble);
         void drawBullet(GLdouble x, GLdouble y);
         void shootBullet(GLdouble x, GLdouble y);
+        int getnBullets();
 };
+
+int Gun::getnBullets() {
+    return this->nBullets;
+}
 
 Gun::Gun(int nBullets) {
     this->nBullets = nBullets;
