@@ -24,6 +24,7 @@ char button_stack = ' ';
 int rotate_angle = 0;
 bool shoot = false;
 bool rot = false;
+bool reload = false;
 bool jump = false;
 int timer = 100;
 
@@ -54,8 +55,13 @@ void drawScene(void) {
     scenario.drawPlataforms();
     character.drawCharacter(xr, yr, rot, rotate_angle);
     if(shoot){
-        character.shoot();
+        character.shoot(rotate_angle);
         shoot = false;
+    }
+
+    if(reload) {
+        character.reload();
+        reload = false;
     }
     glFlush();
 }
@@ -99,6 +105,10 @@ void handleKeyboard(unsigned char key, int x, int y) {
             }
             button_stack = 'd';
             glutPostRedisplay();
+            break;
+        
+        case 'r':
+            reload = true;
             break;
     }
 
