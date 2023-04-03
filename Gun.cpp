@@ -12,7 +12,14 @@ class Gun{
         void drawBullet(GLdouble x, GLdouble y);
         void shootBullet(GLdouble x, GLdouble y);
         int getnBullets();
+        void discountBullet();
 };
+
+void Gun::discountBullet() {
+    if(this->nBullets > 0){
+        this->nBullets -= 1;
+    }
+}
 
 int Gun::getnBullets() {
     return this->nBullets;
@@ -29,7 +36,6 @@ void Gun::shoot(GLdouble xUpdate, GLdouble yUpdate, GLdouble xbullet) {
         glutPostRedisplay();
         glutSwapBuffers();
     }
-    this->nBullets -= 1;
 }
 void Gun::drawGun(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
     glColor3f(0, 0, 0);

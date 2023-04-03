@@ -47,7 +47,16 @@ class Character{
         void shoot(GLdouble);
         void jump();
         void drawHpBar(GLdouble, GLdouble, GLdouble, GLdouble);
+        void reload();
+        void discountBullet();
 };
+
+int Character::hp = 5;
+int Character::currentHp = hp;
+
+void Character::discountBullet() {
+    this->characterGun.discountBullet();
+}
 
 Character::Character(std::string name, GLdouble xStart, GLdouble yStart): characterGun(10) {
     this->name = name;
