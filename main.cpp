@@ -30,13 +30,14 @@ bool jump = false;
 int timer = 100;
 int shootTimer = 10;
 
-std::string characterName = "cladius";
-Character character(characterName, -700, -210);
+Character character("claudius", -700, -210);
+
 Scenario scenario(1);
 
 void handleMouse(GLint button, GLint action, GLint x, GLint y) {
-    if(button == GLUT_LEFT_BUTTON){
+    if(action == GLUT_DOWN && button == GLUT_LEFT_BUTTON){
         xbullet = 10;
+        character.discountBullet();
         shoot = true;
         glutPostRedisplay();
     }

@@ -15,7 +15,14 @@ class Gun{
         void reloadGun();
         int getnCapacity();
         int getnBullets();
+        void discountBullet();
 };
+
+void Gun::discountBullet() {
+    if(this->nBullets > 0){
+        this->nBullets -= 1;
+    }
+}
 
 int Gun::getnBullets() {
     return this->nBullets;
@@ -53,7 +60,6 @@ void Gun::shoot(GLdouble xUpdate, GLdouble yUpdate, int rotate_angle, GLdouble x
             glutSwapBuffers();
         }
     }
-    this->nBullets -= 1;
 }
 void Gun::drawGun(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
     glColor3f(0, 0, 0);
