@@ -83,6 +83,10 @@ void Character::removeHp(int dmg) {
     this->currentHp -= dmg;
 }
 
+void Character::removeHp(int dmg) {
+    this->currentHp -= dmg;
+}
+
 void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
 
     GLdouble boxWidth = 100;
