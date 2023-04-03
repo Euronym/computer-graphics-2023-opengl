@@ -8,7 +8,7 @@ class Gun{
         int capacity = 10;
     public:
         Gun(int nBullets);
-        void shoot(GLdouble, GLdouble, int);
+        void shoot(GLdouble, GLdouble, int, GLdouble);
         void drawGun(GLdouble, GLdouble, GLdouble, GLdouble);
         void drawBullet(GLdouble x, GLdouble y);
         void shootBullet(GLdouble x, GLdouble y);
@@ -32,32 +32,28 @@ void Gun::reloadGun() {
 Gun::Gun(int nBullets) {
     this->nBullets = nBullets;
 }
-
-void Gun::shoot(GLdouble xUpdate, GLdouble yUpdate, int rotate_angle) {
+void Gun::shoot(GLdouble xUpdate, GLdouble yUpdate, int rotate_angle, GLdouble xbullet) {
     int y = -280;
-    if(nBullets != 0) {
-        if (rotate_angle > 0) {
-            for(int x = -720; x > -2400; x = x - 10){
-                glPushMatrix();
-                    glTranslatef(x + xUpdate, y + yUpdate, 0);
-                    glRotatef(rotate_angle, 0, 1, 0);
-                    glTranslatef(-(x + xUpdate), -(y + yUpdate), 0);
-                    drawBullet(x + xUpdate, y + yUpdate);
-                glPopMatrix();
-                glutPostRedisplay();
-                glutSwapBuffers();
-            }
-        } else {
-            for (int x = -680; x < 1000; x = x + 10) {
-                glPushMatrix();
-                    drawBullet(x + xUpdate, y + yUpdate);
-                glPopMatrix();
-                glutPostRedisplay();
-                glutSwapBuffers();
-            }
+    int x = -680;
+    if(nBullets != 0){
+        if(rotate_angle > 0){
+            glPushMatrix();
+                glTranslatef(x + xUpdate, y + yUpdate, 0);
+                glRotatef(rotate_angle, 0, 1, 0);
+                glTranslatef(-(x + xUpdate), -(y + yUpdate), 0);
+                drawBullet(x + xUpdate + xbullet, y + yUpdate);
+            glPopMatrix();
+            glutPostRedisplay();
+            glutSwapBuffers();
+        }else{
+            glPushMatrix();
+                drawBullet(x + xUpdate + xbullet, y + yUpdate);
+            glPopMatrix();
+            glutPostRedisplay();
+            glutSwapBuffers();
         }
-        this->nBullets -= 1;
     }
+    this->nBullets -= 1;
 }
 void Gun::drawGun(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
     glColor3f(0, 0, 0);

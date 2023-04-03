@@ -39,7 +39,7 @@ class Character{
         void rightLeg(float , float);
         void Down();
         void Up();
-        void shoot(int);
+        void shoot(int, GLdouble);
         void jump();
         void drawAmmo(GLdouble, GLdouble, GLdouble, GLdouble);
         void drawHpBar(GLdouble, GLdouble, GLdouble, GLdouble);
@@ -54,8 +54,8 @@ Character::Character(std::string name, GLdouble xStart, GLdouble yStart): charac
     addCoordinates(xStart, yStart);
 }
 
-void Character::shoot(int rotate_angle) {
-    this->characterGun.shoot(this->xr, this->yr, rotate_angle);
+void Character::shoot(int rotate_angle, GLdouble xbullet) {
+    this->characterGun.shoot(this->xr, this->yr, rotate_angle, xbullet);
 }
 
 void Character::reload() {
@@ -71,6 +71,7 @@ void Character::drawAmmo(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpd
     const unsigned char * ammo = reinterpret_cast<const unsigned char*>(str.c_str());
 
     glutBitmapString(GLUT_BITMAP_HELVETICA_18, ammo);
+
 }
 
 void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
