@@ -7,7 +7,7 @@ class Gun{
         int nBullets = 0;
     public:
         Gun(int nBullets);
-        void shoot(GLdouble, GLdouble);
+        void shoot(GLdouble, GLdouble, GLdouble);
         void drawGun(GLdouble, GLdouble, GLdouble, GLdouble);
         void drawBullet(GLdouble x, GLdouble y);
         void shootBullet(GLdouble x, GLdouble y);
@@ -21,14 +21,13 @@ int Gun::getnBullets() {
 Gun::Gun(int nBullets) {
     this->nBullets = nBullets;
 }
-void Gun::shoot(GLdouble xUpdate, GLdouble yUpdate) {
+void Gun::shoot(GLdouble xUpdate, GLdouble yUpdate, GLdouble xbullet) {
     int y = -280;
+    int x = -680;
     if(nBullets != 0){
-        for(int x = -680; x < 1000; x = x  + 10){
-            drawBullet(x + xUpdate, y + yUpdate);
-            glutPostRedisplay();
-            glutSwapBuffers();
-        }
+        drawBullet(x + xUpdate + xbullet, y + yUpdate);
+        glutPostRedisplay();
+        glutSwapBuffers();
     }
     this->nBullets -= 1;
 }

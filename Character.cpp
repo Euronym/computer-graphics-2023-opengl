@@ -44,7 +44,7 @@ class Character{
         void rightLeg(float , float);
         void Down();
         void Up();
-        void shoot();
+        void shoot(GLdouble);
         void jump();
         void drawHpBar(GLdouble, GLdouble, GLdouble, GLdouble);
 };
@@ -54,8 +54,8 @@ Character::Character(std::string name, GLdouble xStart, GLdouble yStart): charac
     addCoordinates(xStart, yStart);
 }
 
-void Character::shoot() {
-    this->characterGun.shoot(this->xr, this->yr);
+void Character::shoot(GLdouble xbullet) {
+    this->characterGun.shoot(this->xr, this->yr, xbullet);
 }
 
 void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {

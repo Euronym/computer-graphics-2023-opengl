@@ -19,12 +19,14 @@
 #define SPACEBAR 32
 
 int xr, yr = 0;
+int xbullet = 0;
 
 bool shoot = false;
 bool rot = false;
 bool jump = false;
 
 int timer = 100;
+int shootTimer = 10;
 
 std::string characterName = "cladius";
 Character character(characterName, -700, -210);
@@ -32,7 +34,8 @@ Scenario scenario(1);
 
 void handleMouse(GLint button, GLint action, GLint x, GLint y) {
     if(button == GLUT_LEFT_BUTTON){
-        shoot = True;
+        xbullet = 10;
+        shoot = true;
         glutPostRedisplay();
     }
 }
@@ -52,9 +55,8 @@ void drawScene(void) {
     scenario.drawSun();
     scenario.drawPlataforms();
     character.drawCharacter(xr, yr, rot);
-    if(shoot){
-        character.shoot();
-        shoot = false;
+    if(shoot) {
+        character.shoot(xbullet);
     }
     glFlush();
 }
@@ -90,6 +92,18 @@ void handleKeyboard(unsigned char key, int x, int y) {
 
 }
 
+void shootTimerFunc(int value){
+    if(shoot){
+        if(xbullet != 0 && xbullet < 1000){
+            xbullet += 10;
+        }else{
+            shoot = false;
+        }        
+    }
+	glutPostRedisplay();
+	glutTimerFunc(shootTimer, shootTimerFunc, value);
+}
+
 void Timer(int value) {
     if(jump){
         if(yr != 0){
@@ -120,6 +134,7 @@ int main(int argc, char **argv) {
     glutKeyboardFunc(handleKeyboard);
     glutMouseFunc(handleMouse);
     glutTimerFunc(timer, Timer, 1);
+    glutTimerFunc(shootTimer, shootTimerFunc, 1);
     initScenario();
     glutMainLoop();
 
