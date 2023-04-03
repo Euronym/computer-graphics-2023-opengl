@@ -4,12 +4,10 @@
 #include<string>
 #include<random>
 
+#include "Point.h"
+
 #define PI 3.14
 #define COLLISION_THRESHOLD 0.1
-
-struct Point{
-    GLdouble x,y;
-};
 
 struct PlataformPoints{
     std::vector<Point> points;
@@ -20,7 +18,7 @@ class Scenario{
         int n;
         std::vector<GLdouble> LastPlatformCoord;
         std::vector<GLdouble> firstPlatformCoord;
-        std::vector<PlataformPoints> plataformPoints;
+        std::vector<PlataformPoints> plataforms;
     public:
         Scenario(int n){
             this->n = n;
@@ -28,13 +26,12 @@ class Scenario{
         std::vector<GLdouble> getLastCoord();
         std::vector<GLdouble> getFirstCoord();
         void loadBackground();
-        void drawPlataform(int x, int y, int width, int height);
+        void drawPlataform(GLdouble, GLdouble, GLdouble, GLdouble);
         void drawPlataforms();
         void drawSun();
         void drawLava(); 
         void detectCollision(); // detect player/scenario collisions
 };
-
 
 std::vector<GLdouble> Scenario::getLastCoord() {
     return this->LastPlatformCoord;
@@ -43,14 +40,7 @@ std::vector<GLdouble> Scenario::getFirstCoord() {
     return this->firstPlatformCoord;
 }
 
-void Scenario::detectCollision(GLdouble ) {
-
-}
-
-void Scenario::loadBackground() {
-
-}
-void Scenario::drawPlataform(int x, int y, int width, int height) {
+void Scenario::drawPlataform(GLdouble x, GLdouble y, GLdouble width, GLdouble height) {
 
     Point p1 = {x, y};
     Point p2 = {x + width, y};
@@ -85,20 +75,24 @@ void Scenario::drawPlataforms(void) {
 
     int characterHeight = 200;
     int characterWidth = 0;
-    int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
-    int screenHeight = glutGet(GLUT_SCREEN_HEIGHT);
+    float screenWidth = glutGet(GLUT_WINDOW_WIDTH);
+    float screenHeight = glutGet(GLUT_WINDOW_HEIGHT);
 
-    int blockWidths[] = {80, 120};
-    int blockWidth;
+    float sizeGap = 50; // gap between plataforms
+    float plataformWidth = 80; // platform width
+    float nPlatforms = 10; // total number of plataforms
+
     int index;
 
     int i,j;
 
+    // TODO we should separate the logic of creating
+    // points from the actual rendering
+
     this->firstPlatformCoord.push_back(-800);
     this->firstPlatformCoord.push_back(-400);
     // draw rows
-    for(i = this->firstPlatformCoord[0];i < 1000; i = i + 150) {
-        // draw columns
+    for(i = -screenWidth / 2;i < screenWidth / 2; i = sizeGap + plataformWidth) {
         if(i > screenWidth) {
             break;
         }
@@ -106,9 +100,8 @@ void Scenario::drawPlataforms(void) {
             if(j > screenHeight) {
                 break;
             }
-            blockWidth = blockWidths[0];
-            // draws an individual block
-            drawPlataform(i, j, blockWidth, 50);
+
+            drawPlataform(i, j, plataformWidth, 50);
         }
     }
     this->LastPlatformCoord.push_back(710);

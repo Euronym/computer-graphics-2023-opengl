@@ -5,15 +5,13 @@
 #include<stdio.h>
 #include<math.h>
 
+#include "Point.h"
+
 #ifndef PI
 #define PI 3.14
 #endif
 
 #include "Gun.cpp"
-
-struct Point{
-    GLdouble x,y;
-};
 
 class Character{
     private:
@@ -77,14 +75,6 @@ void Character::drawAmmo(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpd
 
     glutBitmapString(GLUT_BITMAP_HELVETICA_18, ammo);
 
-}
-
-void Character::removeHp(int dmg) {
-    this->currentHp -= dmg;
-}
-
-void Character::removeHp(int dmg) {
-    this->currentHp -= dmg;
 }
 
 void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
