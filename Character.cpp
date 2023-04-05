@@ -270,9 +270,9 @@ void Character::drawCharacter(float xr, float yr, bool rot, int rotateAngle) {
     //glScaled(0.5, 0.5, 0);
     this->characterGun.drawGun(-650, -280, currentX, currentY);
     // draw hp bar
-    drawHpBar(-830, -250, xr, yr);
+    drawHpBar(-830, -250, currentX, currentY);
     // draw ammo info
-    drawAmmo(-833, -295, xr, yr);
+    drawAmmo(-833, -295, currentX, currentY);
     //draw head
     head(currentX, currentY);
     //draw body
