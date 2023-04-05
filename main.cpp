@@ -72,8 +72,10 @@ void drawScene(void) {
 void handleKeyboard(unsigned char key, int x, int y) {
     switch(key) {
         case SPACEBAR:
-        yr += 40;
-        jump = true;
+        if(yr == 0){
+            yr = 40;
+            jump = true;
+        }
         glutPostRedisplay();
         break;
 
