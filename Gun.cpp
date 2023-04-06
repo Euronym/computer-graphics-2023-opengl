@@ -1,7 +1,6 @@
 #include<GL/freeglut.h>
 #include <unistd.h>
 
-
 class Gun{
     private:
         int nBullets;
@@ -42,6 +41,7 @@ Gun::Gun(int nBullets) {
 void Gun::shoot(GLdouble xUpdate, GLdouble yUpdate, int rotate_angle, GLdouble xbullet) {
     int y = -65;
     int x = 40;
+
     if(nBullets != 0){
         if(rotate_angle > 0){
             glPushMatrix();

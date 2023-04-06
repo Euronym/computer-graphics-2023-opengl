@@ -55,7 +55,12 @@ Character::Character(std::string name, GLdouble xStart, GLdouble yStart): charac
 }
 
 void Character::shoot(int rotate_angle, GLdouble xbullet) {
+    glPushMatrix();
+    if(!this->isUp){
+        glTranslated(0, -20, 0);
+    }
     this->characterGun.shoot(this->xr, this->yr, rotate_angle, xbullet);
+    glPopMatrix();
 }
 
 void Character::reload() {
@@ -257,9 +262,9 @@ void Character::drawCharacter(float xr, float yr, bool rot, int rotateAngle) {
     float currentX = this->xr;
     float currentY = this->yr;
 
-    // check is is up
+    // check if character is up
     if(!this->isUp){
-        glTranslated(0, -20, 0);
+        glTranslated(0, -10, 0);
     }
 
     // draw gun

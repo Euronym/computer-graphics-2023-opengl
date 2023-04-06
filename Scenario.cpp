@@ -126,6 +126,7 @@ void Scenario::drawCharacters() {
         this->c1.discountBullet();
         *this->DiscountBullet = false;
     }
+
     // keeps drawing the bullet's trajectory. 
     if(*this->shoot) {
         this->c1.shoot(*this->rotateAngle, *this->xBullet);
