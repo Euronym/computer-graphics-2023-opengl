@@ -14,31 +14,45 @@
 #include<iostream>
 
 #include "Scenario.cpp"
-#include "Character.cpp"
 
 #define SPACEBAR 32
 
-int xr, yr = 0;
-int xbullet = 0;
+float xr, yr = 0;
+float xbullet = 0;
+float xCloud = 0;
+float rotate_angle = 0;
+float cloudLimit = 500;
 
 char button_stack = ' ';
-int rotate_angle = 0;
 bool shoot = false;
 bool rot = false;
 bool reload = false;
+bool down = false;
 bool jump = false;
+bool discountBullet = false;
+
 int timer = 100;
 int shootTimer = 10;
+int cloudTimer = 500; // move clouds every 0.5s
 
-Character character("claudius", -700, -210);
+float *xrP = &xr;
+float *yrP = &yr;
+float *xCloudP = &xCloud;
+bool *rotP = &rot; 
+float *rotateAngleP = &rotate_angle;
+float *xbulletP = &xbullet;
+bool *shootP = &shoot;
+bool *reloadP = &reload;
+bool *downP = &down;
+bool *discountBulletP = &discountBullet;
 
-Scenario scenario(1);
+Scenario scenario(xrP, yrP, rotP, rotateAngleP, xbulletP, shootP, reloadP, downP, discountBulletP, xCloudP);
 
 void handleMouse(GLint button, GLint action, GLint x, GLint y) {
     if(action == GLUT_DOWN && button == GLUT_LEFT_BUTTON){
         xbullet = 10;
-        character.discountBullet();
         shoot = true;
+        discountBullet = true;
         glutPostRedisplay();
     }
 }
@@ -56,16 +70,9 @@ void initScenario(void) {
 void drawScene(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     scenario.drawSun();
-    scenario.drawPlataforms();
-    character.drawCharacter(xr, yr, rot, rotate_angle);
-    if(shoot) {
-        character.shoot(rotate_angle, xbullet);
-    }
-
-    if(reload) {
-        character.reload();
-        reload = false;
-    }
+    scenario.drawClouds();
+    scenario.drawGround();
+    scenario.drawCharacters();
     glFlush();
 }
 
@@ -80,40 +87,45 @@ void handleKeyboard(unsigned char key, int x, int y) {
         break;
 
         case 'w':
-        character.Up();
+        down = false;
         glutPostRedisplay();
         break;
 
         case 's':
-        character.Down();
+        down = true;
         glutPostRedisplay();
         break;
 
         case 'a':
-            if (button_stack == 'd') {
-                rotate_angle = 180;
-                xr -= 10;
-            } else if (button_stack == ' ' || button_stack == 'a') {
-                xr -= 10;
+            if(!down) {
+                if (button_stack == 'd') {
+                    rotate_angle = 180;
+                    xr -= 10;
+                } else if (button_stack == ' ' || button_stack == 'a') {
+                    xr -= 10;
+                }
+                button_stack = 'a';            
+                glutPostRedisplay();
             }
-            button_stack = 'a';            
-            glutPostRedisplay();
             break;
 
         case 'd':
-            if (button_stack == 'a') {
-                rotate_angle = 180;
-                xr += 10;
-            } else if (button_stack == ' ' || button_stack == 'd') {
-                xr += 10;
-                rotate_angle = 0;
+            if(!down) {
+                if (button_stack == 'a') {
+                    rotate_angle = 180;
+                    xr += 10;
+                } else if (button_stack == ' ' || button_stack == 'd') {
+                    xr += 10;
+                    rotate_angle = 0;
+                }
+                button_stack = 'd';
+                glutPostRedisplay();
             }
-            button_stack = 'd';
-            glutPostRedisplay();
             break;
         
         case 'r':
             reload = true;
+            glutPostRedisplay();
             break;
     }
 
@@ -131,6 +143,7 @@ void shootTimerFunc(int value){
 	glutTimerFunc(shootTimer, shootTimerFunc, value);
 }
 
+
 void Timer(int value) {
     if(jump){
         if(yr != 0){
@@ -142,6 +155,17 @@ void Timer(int value) {
 
 	glutPostRedisplay();
 	glutTimerFunc(timer, Timer, value);
+}
+
+void cloudsTimer(int value) {
+    if(xCloud < cloudLimit){
+        xCloud += 30;
+    }else{
+        xCloud -= 30;
+    }
+
+    glutPostRedisplay();
+	glutTimerFunc(cloudTimer, cloudsTimer, value);
 }
 
 int main(int argc, char **argv) {
@@ -159,16 +183,10 @@ int main(int argc, char **argv) {
     glutDisplayFunc(drawScene);
 
     glutKeyboardFunc(handleKeyboard);
-/*
-    if (rotate) {
-        rotate_angle = 180;
-    } {
-        rotate_angle = 0;
-    }
-*/
     glutMouseFunc(handleMouse);
     glutTimerFunc(timer, Timer, 1);
     glutTimerFunc(shootTimer, shootTimerFunc, 1);
+    glutTimerFunc(cloudTimer, cloudsTimer, 1);
     initScenario();
     glutMainLoop();
 

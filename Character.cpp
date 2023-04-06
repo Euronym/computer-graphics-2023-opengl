@@ -20,16 +20,14 @@ class Character{
         int isUp = 1;
         float xr, yr = 0;
         bool move = true;
-        static int hp; // character's total life.
-        static int currentHp; // current life
+        int hp = 5; // character's total life.
+        int currentHp = hp; // current life
         std::string name;
         std::vector<Point> characterCoordinates;
         Gun characterGun;
     public:
         Character(std::string name, GLdouble xStart, GLdouble yStart);
         void addCoordinates(GLdouble xStart, GLdouble yStart);
-        void walkFront();
-        void walkBack();
         void drawCharacter(float , float, bool, int);
         void head(float , float);
         void body(float , float);
@@ -46,9 +44,6 @@ class Character{
         void reload();
         void discountBullet();
 };
-
-int Character::hp = 5;
-int Character::currentHp = hp;
 
 void Character::discountBullet() {
     this->characterGun.discountBullet();
@@ -123,9 +118,7 @@ void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUp
 
         barEndxp1 += 20;
         barEndxp2 += 20;
-        factor = 0;
     }
-    this->currentHp = this->currentHp - 1;
 }
 
 void Character::Down() {
@@ -181,7 +174,6 @@ void Character::head(float xr, float yr) {
     double radius = 10;
 
     glColor3f(1, 1, 0);
-
     glBegin(GL_POLYGON);
         for (int i = 0; i <= 300; i++) {
             GLdouble angle = 2 * PI * i / 300;
@@ -265,14 +257,17 @@ void Character::drawCharacter(float xr, float yr, bool rot, int rotateAngle) {
     float currentX = this->xr;
     float currentY = this->yr;
 
+    // check is is up
+    if(!this->isUp){
+        glTranslated(0, -20, 0);
+    }
+
     // draw gun
-    //glPushMatrix();
-    //glScaled(0.5, 0.5, 0);
-    this->characterGun.drawGun(-650, -280, currentX, currentY);
+    this->characterGun.drawGun(40, -65, currentX, currentY);
     // draw hp bar
-    drawHpBar(-830, -250, currentX, currentY);
+    drawHpBar(-140, 0, currentX, currentY);
     // draw ammo info
-    drawAmmo(-833, -295, currentX, currentY);
+    drawAmmo(-140, -65, currentX, currentY);
     //draw head
     head(currentX, currentY);
     //draw body
@@ -286,7 +281,4 @@ void Character::drawCharacter(float xr, float yr, bool rot, int rotateAngle) {
     //draw other arm
     leftArm(currentX, currentY);
     glPopMatrix();
-    glFlush();
-    glutPostRedisplay();
-    glutSwapBuffers();
 }

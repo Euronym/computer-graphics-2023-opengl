@@ -40,8 +40,8 @@ Gun::Gun(int nBullets) {
     this->nBullets = nBullets;
 }
 void Gun::shoot(GLdouble xUpdate, GLdouble yUpdate, int rotate_angle, GLdouble xbullet) {
-    int y = -280;
-    int x = -680;
+    int y = -65;
+    int x = 40;
     if(nBullets != 0){
         if(rotate_angle > 0){
             glPushMatrix();
@@ -50,15 +50,12 @@ void Gun::shoot(GLdouble xUpdate, GLdouble yUpdate, int rotate_angle, GLdouble x
                 glTranslatef(-(x + xUpdate), -(y + yUpdate), 0);
                 drawBullet(x + xUpdate + xbullet, y + yUpdate);
             glPopMatrix();
-            glutPostRedisplay();
-            glutSwapBuffers();
         }else{
             glPushMatrix();
                 drawBullet(x + xUpdate + xbullet, y + yUpdate);
             glPopMatrix();
-            glutPostRedisplay();
-            glutSwapBuffers();
         }
+        glutPostRedisplay();
     }
 }
 void Gun::drawGun(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
