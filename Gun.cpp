@@ -5,16 +5,17 @@ class Gun{
     private:
         int nBullets;
         int capacity = 10;
+        int bulletPosition[2];
     public:
         Gun(int nBullets);
         void shoot(GLdouble, GLdouble, int, GLdouble);
         void drawGun(GLdouble, GLdouble, GLdouble, GLdouble);
         void drawBullet(GLdouble x, GLdouble y);
-        void shootBullet(GLdouble x, GLdouble y);
         void reloadGun();
         int getnCapacity();
         int getnBullets();
         void discountBullet();
+        int *getBulletPosition();
 };
 
 void Gun::discountBullet() {
@@ -79,9 +80,6 @@ void Gun::drawGun(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUpdate) {
         glVertex2d(x + 10 + xUpdate, y + 30 + yUpdate);
     glEnd();
 }
-void Gun::shootBullet(GLdouble x, GLdouble y) {
-
-}
 void Gun::drawBullet(GLdouble x, GLdouble y) {
     int f1 = 40;
     int f2 = 20;
@@ -91,4 +89,10 @@ void Gun::drawBullet(GLdouble x, GLdouble y) {
         glVertex2d(0 + f1 + x, 10 + f2 + y);
         glVertex2d(20 + f1 + x, 5 + f2 + y);
     glEnd();
+    this->bulletPosition[0] = 20 + f1 + x;
+    this->bulletPosition[1] = 5 + f2 + y;
+}
+
+int *Gun::getBulletPosition() {
+    return this->bulletPosition;
 }

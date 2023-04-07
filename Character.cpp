@@ -43,11 +43,17 @@ class Character{
         void drawHpBar(GLdouble, GLdouble, GLdouble, GLdouble);
         void reload();
         void discountBullet();
+        void discountHp();
 };
 
 void Character::discountBullet() {
     this->characterGun.discountBullet();
 }
+
+void Character::discountHp() {
+    this->currentHp -= 1;
+}
+
 
 Character::Character(std::string name, GLdouble xStart, GLdouble yStart): characterGun(10) {
     this->name = name;
@@ -110,6 +116,9 @@ void Character::drawHpBar(GLdouble x, GLdouble y, GLdouble xUpdate, GLdouble yUp
     for(int i = 0;i < this->hp; i++) {
         // if current hp is lower than total
         // does not show bars as green.
+        if(i > this->currentHp - 1){
+            factor = 0;
+        }
         glBegin(GL_QUADS);
             // hpbar itself.
             glVertex2d(factor * barStartxp1, factor * barStartyp1);

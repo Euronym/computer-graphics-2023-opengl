@@ -59,20 +59,16 @@ void handleMouse(GLint button, GLint action, GLint x, GLint y) {
 
 void initScenario(void) {
     glClearColor(0, 0, 1, 1.0);
-
     glPointSize(1.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-
     gluOrtho2D(-780, 780, -420, 420);
+
 }
 
 void drawScene(void) {
     glClear(GL_COLOR_BUFFER_BIT);
-    scenario.drawSun();
-    scenario.drawClouds();
-    scenario.drawGround();
-    scenario.drawCharacters();
+    scenario.drawScenario();
     glFlush();
 }
 
@@ -180,6 +176,8 @@ int main(int argc, char **argv) {
     glutInitWindowPosition(0, 0);
 
     glutCreateWindow("Jogo");
+    initScenario();
+    scenario.loadTextures();
     glutDisplayFunc(drawScene);
 
     glutKeyboardFunc(handleKeyboard);
@@ -187,7 +185,6 @@ int main(int argc, char **argv) {
     glutTimerFunc(timer, Timer, 1);
     glutTimerFunc(shootTimer, shootTimerFunc, 1);
     glutTimerFunc(cloudTimer, cloudsTimer, 1);
-    initScenario();
     glutMainLoop();
 
     return 0;

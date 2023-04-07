@@ -4,6 +4,7 @@
 #include<random>
 
 #include "Character.cpp"
+#include "stb_image.cpp"
 
 #ifndef PI
 #define PI 3.14
@@ -21,17 +22,25 @@ class Scenario{
         bool *down;
         bool *DiscountBullet;
         float *xCloud;
+        GLuint groundTexture;
+        GLuint sunTexture;
+        GLuint skyTexture;
+
         Character c1;
         Character c2;
     public:
         Scenario(float*, float*, bool*, float*, float*, bool*, bool*, bool*, bool*, float*);
-        void drawGround();
-        void drawCharacters();
+        void drawScenario();
+        void loadTextures();
+    protected:
+        void drawCircleFilled(double, double, double, double);
         void drawSun();
         void drawClouds();
         void drawCloud();
-    protected:
-        void drawCircleFilled(double, double, double, double);
+        void drawCharacters();
+        void drawGround();
+        void drawBackground();
+        void loadTexture(const char*, GLuint);
 };
 
 Scenario::Scenario(float *xr, 
@@ -54,6 +63,73 @@ Scenario::Scenario(float *xr,
     this->down = down;
     this->DiscountBullet = discountBullet;
     this->xCloud = xCloud;
+}
+
+void Scenario::drawScenario() {
+    drawBackground();
+    drawSun();
+    drawClouds();
+    drawGround();
+    drawCharacters();
+}
+
+void Scenario::drawBackground() {
+
+    int widthScreen = glutGet(GLUT_SCREEN_WIDTH);
+    int heightScreen = glutGet(GLUT_SCREEN_HEIGHT);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, this->skyTexture);
+    glBegin(GL_QUADS);
+        glTexCoord2f(1, 1); glVertex2d(widthScreen, heightScreen);
+        glTexCoord2f(0, 1); glVertex2d(-widthScreen, heightScreen);
+        glTexCoord2f(0, 0); glVertex2d(-widthScreen, -heightScreen);
+        glTexCoord2f(1, 0); glVertex2d(widthScreen, -heightScreen);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void Scenario::loadTextures() {
+    GLuint groundTexture = 1;
+    GLuint sunTexture = 2;
+    GLuint skyTexture = 3;
+
+    this->groundTexture = groundTexture;
+    this->sunTexture = sunTexture;
+    this->skyTexture = skyTexture;
+
+    // ground texture
+    loadTexture("Assets/Animation/groundTexture.jpeg", groundTexture);
+    // sun texture
+    loadTexture("Assets/Animation/sunTexture.jpeg", sunTexture);
+    // sky texture
+    loadTexture("Assets/Animation/skyTextureNew.jpg", skyTexture);
+}
+
+
+void Scenario::loadTexture(const char *imgPath, GLuint textureId) {
+
+    int height, width, nChannels;
+
+    stbi_set_flip_vertically_on_load(true);  
+    unsigned char *dataGroundTexture = stbi_load(imgPath, &width, &height, &nChannels, 0);
+
+    GLuint texture;
+
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, dataGroundTexture);
+
+    stbi_image_free(dataGroundTexture);
+
+    //glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Scenario::drawCircleFilled (double centerX, double centerY, double radiusX, double radiusY) {
@@ -162,26 +238,42 @@ void Scenario::drawGround() {
     GLint height = 100;
     GLint width = 1800;
 
-    glColor3f(0.1, 0, 0.0);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, this->groundTexture);
     glBegin(GL_QUADS);
-        glVertex2i(x, y);
-        glVertex2i(x + width, y);
-        glVertex2i(x + width, y + height);
-        glVertex2i(x, y + height);
+        glTexCoord2f(0, 10); glVertex2i(x, y);
+
+        glTexCoord2f(0, 0); glVertex2i(x + width, y);
+
+        glTexCoord2f(10, 0); glVertex2i(x + width, y + height);
+
+        glTexCoord2f(10, 10); glVertex2i(x, y + height);
     glEnd();
+
+    glDisable(GL_TEXTURE_2D);
 }
 
 void Scenario::drawSun(void) {
-    glColor3f(1, 1, 0);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, this->sunTexture);
     glBegin(GL_POLYGON);                        
         double radius = 100;
         double ori_x = -600;                  
         double ori_y = 300;
+        double xcos, ysin;
+        double tx, ty;
         for (int i = 0; i <= 300; i++) {
             double angle = 2 * PI * i / 300;
-            double x = cos(angle) * radius;
-            double y = sin(angle) * radius;
-            glVertex2d(ori_x + x, ori_y + y);
+            xcos = cos(angle);
+            ysin = sin(angle);
+            double x = xcos * radius;
+            double y = ysin * radius;
+
+            tx = xcos * 0.5 + 0.5;
+            ty = ysin * 0.5 + 0.5;
+
+            glTexCoord2f(tx, ty); glVertex2d(ori_x + x, ori_y + y);
         }
     glEnd();
+    glDisable(GL_TEXTURE_2D);
 }
