@@ -78,6 +78,8 @@ void Scenario::drawBackground() {
     int widthScreen = glutGet(GLUT_SCREEN_WIDTH);
     int heightScreen = glutGet(GLUT_SCREEN_HEIGHT);
 
+    glPushMatrix();
+    glColor3f(1, 1, 1);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, this->skyTexture);
     glBegin(GL_QUADS);
@@ -87,6 +89,7 @@ void Scenario::drawBackground() {
         glTexCoord2f(1, 0); glVertex2d(widthScreen, -heightScreen);
     glEnd();
     glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
 }
 
 void Scenario::loadTextures() {
