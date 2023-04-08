@@ -6,9 +6,12 @@
 #include "Character.cpp"
 #include "stb_image.cpp"
 
+#include "point.h"
+
 #ifndef PI
 #define PI 3.14
 #endif
+
 
 class Scenario{
     private:
@@ -52,7 +55,7 @@ Scenario::Scenario(float *xr,
                    bool *reload, 
                    bool *down,
                    bool *discountBullet,
-                   float *xCloud): c1("claudius", 0, 0), c2("Bruno", 0, 0) {
+                   float *xCloud): c1("claudius666", 0, 0), c2("Euronymous", 0, 0) {
     this->xr = xr;
     this->yr = yr;
     this->rot = rot;
@@ -77,6 +80,8 @@ void Scenario::drawBackground() {
 
     int widthScreen = glutGet(GLUT_SCREEN_WIDTH);
     int heightScreen = glutGet(GLUT_SCREEN_HEIGHT);
+
+    glColor3f(1, 1, 1);
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, this->skyTexture);
@@ -196,16 +201,25 @@ void Scenario::drawCloud() {
 
 void Scenario::drawCharacters() {
     glPushMatrix();
-    glTranslated(20, -210, 0);
+    glTranslated(-500, -210, 0);
     this->c1.drawCharacter(*this->xr, *this->yr, *this->rot, *this->rotateAngle);
-    if(*this->DiscountBullet){
-        this->c1.discountBullet();
-        *this->DiscountBullet = false;
-    }
-
+    Point c1Loc = {20, -210};
+    this->c2.setCharacterLocation(c1Loc);
     // keeps drawing the bullet's trajectory. 
     if(*this->shoot) {
         this->c1.shoot(*this->rotateAngle, *this->xBullet);
+        // get current position of bullet
+        Point bulletPosition = this->c1.getBulletPosition();
+        // checks if c2 was shot
+        bool characterShot = this->c2.checkBulletCollision(bulletPosition);
+        if(characterShot && *this->DiscountBullet){
+            this->c2.discountHp();
+        }
+    }
+
+    if(*this->DiscountBullet){
+        this->c1.discountBullet();
+        *this->DiscountBullet = false;
     }
 
     if(*this->reload) {
@@ -224,8 +238,12 @@ void Scenario::drawCharacters() {
     // second player logic
     glPushMatrix();
     glTranslated(200, -210, 0);
-    glScaled(-1, 1, 1);
-    this->c2.drawCharacter(0, 0, 0, 0);
+    glRotated(180, 0, 1, 0);
+    glTranslated(0, 0, 0);
+
+    this->c2.drawCharacter(0, 0 , 0, 0);
+    Point c2Loc = {200, -210};
+    this->c2.setCharacterLocation(c2Loc);
     glPopMatrix();
 
     glutPostRedisplay();

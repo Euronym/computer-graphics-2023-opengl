@@ -1,11 +1,13 @@
 #include<GL/freeglut.h>
 #include <unistd.h>
 
+#include "point.h"
+
 class Gun{
     private:
         int nBullets;
         int capacity = 10;
-        int bulletPosition[2];
+        Point bulletPosition;
     public:
         Gun(int nBullets);
         void shoot(GLdouble, GLdouble, int, GLdouble);
@@ -15,7 +17,7 @@ class Gun{
         int getnCapacity();
         int getnBullets();
         void discountBullet();
-        int *getBulletPosition();
+        Point getBulletPosition();
 };
 
 void Gun::discountBullet() {
@@ -89,10 +91,10 @@ void Gun::drawBullet(GLdouble x, GLdouble y) {
         glVertex2d(0 + f1 + x, 10 + f2 + y);
         glVertex2d(20 + f1 + x, 5 + f2 + y);
     glEnd();
-    this->bulletPosition[0] = 20 + f1 + x;
-    this->bulletPosition[1] = 5 + f2 + y;
+    Point bulletPosition = {20 + f1 + x, 5 + f2 + y};
+    this->bulletPosition = bulletPosition;
 }
 
-int *Gun::getBulletPosition() {
+Point Gun::getBulletPosition() {
     return this->bulletPosition;
 }
