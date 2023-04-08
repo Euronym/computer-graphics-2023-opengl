@@ -99,11 +99,11 @@ void Scenario::loadTextures() {
     this->skyTexture = skyTexture;
 
     // ground texture
-    loadTexture("Assets/Animation/groundTexture.jpeg", groundTexture);
+    loadTexture("Assets/Texture/groundTexture.jpeg", groundTexture);
     // sun texture
-    loadTexture("Assets/Animation/sunTexture.jpeg", sunTexture);
+    loadTexture("Assets/Texture/sunTexture.jpeg", sunTexture);
     // sky texture
-    loadTexture("Assets/Animation/skyTextureNew.jpg", skyTexture);
+    loadTexture("Assets/Texture/skyTextureNew.jpg", skyTexture);
 }
 
 
